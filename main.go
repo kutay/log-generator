@@ -42,29 +42,24 @@ func headers(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func parseRequestParamInt(req *http.Request, paramName string, defaultValue int) int {
+	reqValue := req.URL.Query().Get(paramName)
+	if reqValue != "" {
+		i, err := strconv.Atoi(reqValue)
+
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			return i
+		}
+	}
+
+	return defaultValue
+}
+
 func generate(w http.ResponseWriter, req *http.Request) {
-	interval := 1000
-	reqInterval := req.URL.Query().Get("interval_ms")
-	if reqInterval != "" {
-		i, err := strconv.Atoi(reqInterval)
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			interval = i
-		}
-	}
-	limit := 10
-	reqLimit := req.URL.Query().Get("limit")
-	if reqLimit != "" {
-		i, err := strconv.Atoi(reqLimit)
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			limit = i
-		}
-	}
+	interval := parseRequestParamInt(req, "interval_ms", 1000)
+	limit := parseRequestParamInt(req, "limit", 10)
 
 	generateLogs(interval, limit)
 }
