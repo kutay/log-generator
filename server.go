@@ -31,5 +31,11 @@ func generate(w http.ResponseWriter, req *http.Request) {
 	format := parseRequestParamString(req, "format", "plain")
 	messageLength := parseRequestParamInt(req, "message_length", 100)
 
-	generateLogs(interval, limit, format, messageLength)
+	go func() {
+		generateLogs(interval, limit, format, messageLength)
+	}()
+
+	w.WriteHeader(http.StatusAccepted)
+	fmt.Fprintf(w, "Generating %d logs of length %d every %dms in %s format", limit, messageLength, interval, format)
+
 }

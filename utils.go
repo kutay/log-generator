@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ        0123456789")
 
 func randSeq(n int) string {
 	b := make([]rune, n)
