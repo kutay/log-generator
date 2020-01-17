@@ -14,6 +14,6 @@ USER appuser
 COPY --from=builder /build/main /app/
 WORKDIR /app
 
-EXPOSE 8080
+EXPOSE 8090
 
 CMD ["./main"]
