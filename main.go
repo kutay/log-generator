@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -20,8 +21,6 @@ func randSeq(n int) string {
 
 func main() {
 	fmt.Println("Starting log-generator on port 8090")
-
-	generateLogs(100, 10)
 
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
@@ -57,18 +56,47 @@ func parseRequestParamInt(req *http.Request, paramName string, defaultValue int)
 	return defaultValue
 }
 
+func parseRequestParamString(req *http.Request, paramName string, defaultValue string) string {
+	reqValue := req.URL.Query().Get(paramName)
+	if reqValue != "" {
+		return reqValue
+	}
+
+	return defaultValue
+}
+
 func generate(w http.ResponseWriter, req *http.Request) {
 	interval := parseRequestParamInt(req, "interval_ms", 1000)
 	limit := parseRequestParamInt(req, "limit", 10)
+	format := parseRequestParamString(req, "format", "plain")
+	messageLength := parseRequestParamInt(req, "message_length", 100)
 
-	generateLogs(interval, limit)
+	generateLogs(interval, limit, format, messageLength)
 }
 
-func generateLogs(interval int, limit int) {
+func generateLogs(interval int, limit int, format string, messageLength int) {
 	rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < limit; i++ {
-		fmt.Println(randSeq(100))
-		time.Sleep(time.Duration(interval) * time.Millisecond)
+		now := time.Now().Format(time.RFC3339Nano)
+
+		if format == "plain" {
+			fmt.Println(now, randSeq(messageLength))
+		} else if format == "json" {
+			msg, err := json.Marshal(EventLog{now, randSeq(messageLength)})
+			if err != nil {
+				fmt.Println(err)
+			}
+			fmt.Println(string(msg))
+		}
+
+		if interval > 0 {
+			time.Sleep(time.Duration(interval) * time.Millisecond)
+		}
 	}
+}
+
+type EventLog struct {
+	Datetime string
+	Message  string
 }
