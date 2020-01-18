@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-generator
+  labels:
+    app: log-generator
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: log-generator
+  template:
+    metadata:
+      labels:
+        app: log-generator
+    spec:
+      containers:
+        - name: generator
+          image: "orkhonfr/log-generator"
+          ports:
+            - name: http
+              containerPort: 8090
+              protocol: "TCP"
+          resources: {}
+          
+
