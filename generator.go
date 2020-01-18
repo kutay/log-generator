@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 )
 
 type EventLog struct {
@@ -13,12 +16,20 @@ type EventLog struct {
 	Severity string
 }
 
+var (
+	logGenerated = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "log_generator_generated_log_total",
+		Help: "The total number of generated logs",
+	})
+)
+
 func generateLogs(interval int, limit int, format string, messageLength int) {
 	rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < limit; i++ {
 		logString := generateLog(format, messageLength, limit, interval)
 		fmt.Println(logString)
+		logGenerated.Inc()
 
 		if interval > 0 {
 			time.Sleep(time.Duration(interval) * time.Millisecond)

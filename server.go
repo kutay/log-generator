@@ -3,12 +3,16 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func initServer() {
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 	http.HandleFunc("/generate", generate)
+
+	http.Handle("/metrics", promhttp.Handler())
 
 	http.ListenAndServe(":8090", nil)
 }
