@@ -5,8 +5,6 @@ ADD . /build/
 WORKDIR /build 
 RUN go build -o main .
 
-LABEL maintainer="Aykut ACIKEL <aykut.acikel@gmail.com>"
-
 FROM alpine
 
 RUN adduser -S -D -H -h /app appuser
