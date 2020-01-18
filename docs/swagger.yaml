@@ -1,0 +1,42 @@
+info:
+  contact: {}
+  license: {}
+paths:
+  /generate:
+    get:
+      description: starts log generation with the provided parameters
+      parameters:
+      - default: 1000
+        description: interval in ms between each log
+        in: query
+        name: interval_ms
+        type: integer
+      - default: 10
+        description: number of logs to generate
+        in: query
+        name: limit
+        type: integer
+      - default: 100
+        description: length of the log message field
+        in: query
+        name: message_length
+        type: integer
+      - default: plain
+        description: 'format : plain / json'
+        enum:
+        - plain
+        - json
+        in: query
+        name: format
+        type: string
+      responses:
+        "202": {}
+        "400": {}
+      summary: Start log generation
+  /metrics:
+    get:
+      description: get metrics in Prometheus format
+      responses:
+        "200": {}
+      summary: Get metrics
+swagger: "2.0"

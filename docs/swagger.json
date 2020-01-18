@@ -1,0 +1,62 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/generate": {
+            "get": {
+                "description": "starts log generation with the provided parameters",
+                "summary": "Start log generation",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1000,
+                        "description": "interval in ms between each log",
+                        "name": "interval_ms",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "number of logs to generate",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 100,
+                        "description": "length of the log message field",
+                        "name": "message_length",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "plain",
+                            "json"
+                        ],
+                        "type": "string",
+                        "default": "plain",
+                        "description": "format : plain / json",
+                        "name": "format",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "202": {},
+                    "400": {}
+                }
+            }
+        },
+        "/metrics": {
+            "get": {
+                "description": "get metrics in Prometheus format",
+                "summary": "Get metrics",
+                "responses": {
+                    "200": {}
+                }
+            }
+        }
+    }
+}
