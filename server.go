@@ -10,7 +10,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func initServer() {
+func initServer(serverPort int) {
 	docs.SwaggerInfo.Title = "LogGenerator API"
 	docs.SwaggerInfo.Version = "0.0.2"
 
@@ -21,7 +21,7 @@ func initServer() {
 	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
-	http.ListenAndServe(":8090", nil)
+	http.ListenAndServe(fmt.Sprintf(":%d", serverPort), nil)
 }
 
 func hello(w http.ResponseWriter, req *http.Request) {

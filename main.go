@@ -2,10 +2,22 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 )
 
 func main() {
-	fmt.Println("Starting log-generator on port 8090")
+	port := 8090
+	envPort := os.Getenv("PORT")
 
-	initServer()
+	if envPort != "" {
+		i, err := strconv.Atoi(envPort)
+		if err == nil {
+			port = i
+		}
+	}
+
+	fmt.Println("Starting log-generator on port", port)
+
+	initServer(port)
 }
